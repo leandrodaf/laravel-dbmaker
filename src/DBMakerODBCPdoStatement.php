@@ -76,7 +76,7 @@ class DBMakerODBCPdoStatement extends PDOStatement {
 		$this->params = [];
 	}
 	
-	public function fetchAll($how = NULL, $class_name = NULL, $ctor_args = NULL) {
+	public function fetchAll($mode = \PDO::FETCH_DEFAULT, ...$args) {
 		$records = [];
 		while($record = $this->fetch()) {
 			$records [] = $record;
