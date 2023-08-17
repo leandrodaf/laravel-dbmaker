@@ -1,51 +1,50 @@
 <?php
 
-/**
- * Created by syscom.
- * User: syscom
- * Date: 17/06/2019
- * Time: 15:50
- */
 namespace DBMaker\ODBC;
 
 use PDO;
 use PDOStatement;
 
-class DBMakerPdo extends PDO {
-
-    /**
-     * @var $pdo PDO
-     */
+class DBMakerPdo extends PDO
+{
+    /** @var PDO */
     protected $pdo;
 
     /**
      * Get the column listing for a given table.
      *
-     * @param string $dsn
-     * @param string $username
-     * @param string $password
-     * @param array $options
+     * @param  array  $options
      */
     public function __construct(string $dsn, string $username, string $password, $options = [])
     {
-        if (isset($options['dbidcap']) && $options['dbidcap'] == 1) $options[PDO::ATTR_CASE] = PDO::CASE_LOWER;
-        parent :: __construct($dsn, $username, $password, $options);
+        $options = array_replace($options, [
+            PDO::ATTR_EMULATE_PREPARES   => false, // Disable emulated prepares for security reasons
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Enable exception mode
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Set default fetch mode
+        ]);
+
+        if (isset($options['dbidcap']) && $options['dbidcap'] == 1) {
+            $options[PDO::ATTR_CASE] = PDO::CASE_LOWER;
+        }
+
+        parent::__construct($dsn, $username, $password, $options);
         $pdo = new PDO($dsn, $username, $password, $options);
         $this->setConnection($pdo);
     }
 
     /**
+     * Prepare a statement.
      *
      * @param  string  $statement
      * @param  array  $options
-     * @return DBMakerPdo|false|PDOStatement
      */
-    public function prepare($statement, $options = []) {
-        return parent::prepare($statement);
+    public function prepare($statement, $options = []): false|PDOStatement
+    {
+        return $this->getConnection()->prepare($statement, $options);
     }
 
     /**
-     * @return mixed
+     * Get the underlying PDO connection.
      */
     public function getConnection(): PDO
     {
@@ -53,10 +52,10 @@ class DBMakerPdo extends PDO {
     }
 
     /**
-     * @param $pdo
-     * @return void
+     * Set the underlying PDO connection.
      */
-    public function setConnection($pdo) {
+    public function setConnection(PDO $pdo): void
+    {
         $this->pdo = $pdo;
     }
 }
