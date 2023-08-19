@@ -37,7 +37,7 @@ class DBMakerConnector extends Connector implements ConnectorInterface
         $password = $config['password'] ?? null;
 
         try {
-            return $this->createPdoConnection($dsn, $username, $password, $options);
+            return $this->createPdoConnection("odbc:" .$dsn, $username, $password, $options);
         }
         catch (Exception $e) {
             return new DBMakerODBCPdo($dsn, $username, $password, $options);

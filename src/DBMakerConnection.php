@@ -46,8 +46,7 @@ class DBMakerConnection extends Connection
      */
     public function query()
     {
-        return new DBMakerQueryBuilder($this, $this->getQueryGrammar(),
-            $this->getPostProcessor());
+        return new DBMakerQueryBuilder($this, $this->getQueryGrammar(), $this->getPostProcessor());
     }
 
     /**

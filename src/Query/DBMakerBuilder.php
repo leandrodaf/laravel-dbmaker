@@ -15,7 +15,7 @@ class DBMakerBuilder extends Builder
 
     public function __construct(
         ConnectionInterface $connection,
-        ?DBMakerQueryGrammar $grammar = null,
+        $grammar = null,
         ?Processor $processor = null
     ) {
         $this->DB_IDCap = $connection->getDB_IDCap() ?? 1;
